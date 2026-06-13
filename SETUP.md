@@ -6,17 +6,41 @@ This codebase has been tested with the packages and versions specified in `requi
 
 We recommend creating a new [conda](https://docs.conda.io/en/latest/) virtual environment:
 ```bash
-conda create -n multimae python=3.8 -y
+#conda create -n multimae python=3.8 -y
+conda create -n multimae_py310 python=3.10 -y
 conda activate multimae
 ```
 Then, install [PyTorch](https://pytorch.org/) 1.10.0+ and [torchvision](https://pytorch.org/vision/stable/index.html) 0.11.1+. For example:
 ```bash
-conda install pytorch=1.10.0 torchvision=0.11.1 -c pytorch -y
+# conda install pytorch=1.10.0 torchvision=0.11.1 -c pytorch -y
+pip install torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cu124
+```
+
+### Install the Detectron2 from the source
+
+as Detectron2 needs a C++ compiler to build. Some tools must be installed directly on the system (not conda env)
+
+```bash
+# Update Ubuntu's package manager and install the essential C++ compiler (gcc/g++)
+sudo apt-get update && sudo apt-get install -y build-essential libgl1-mesa-glx libglib2.0-0 libxrender1 libxext6
+```
+
+Following apply inside the active conda env
+```bash
+# 1. Install prerequisites required by Meta AI
+pip install cython pycocotools
+pip install 'git+https://github.com/facebookresearch/fvcore'
+
+# 2. Compile Detectron2 directly using your active environment's PyTorch links
+pip install --no-build-isolation 'git+https://github.com/facebookresearch/detectron2.git'
 ```
 
 Finally, install all other required packages:
 ```bash
-pip install timm==0.4.12 einops==0.3.2 pandas==1.3.4 albumentations==1.1.0 wandb==0.12.11
+# pip install timm==0.4.12 einops==0.3.2 pandas==1.3.4 albumentations==1.1.0 wandb==0.12.11
+
+# let pip determin compatiable version (for python3.10)
+pip install timm einops pandas albumentations wandb
 ```
 :information_source: If data loading and image transforms are the bottleneck, consider replacing Pillow with [Pillow-SIMD](https://github.com/uploadcare/pillow-simd) and compiling it with [libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo). You can find a detailed guide on how to do this [here](https://fastai1.fast.ai/performance.html#installation) or use the provided script:
 ```bash
