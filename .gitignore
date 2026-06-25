@@ -14,3 +14,5 @@ runs/
 notebooks/
 pretrained/
 nyuv2_dataset/
+DPT/
+Mask2Former/
